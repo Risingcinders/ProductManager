@@ -26,6 +26,7 @@ export default () => {
                         <th>Project Name</th>
                         <th>Project Price</th>
                         <th>Project Description</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>{loaded ? <ProjectList projects={projArr} />: null}</tbody>

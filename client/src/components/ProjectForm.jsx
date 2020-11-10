@@ -27,7 +27,7 @@ export default () => {
             </p>
             <p>
                 <label>Price:</label><br/>
-                <input type="number" step="1" min="10" onChange = {(e)=>setPrice(e.target.value)}/>
+                <input type="number" step="1" min="1" onChange = {(e)=>setPrice(e.target.value)}/>
             </p>
             <p>
                 <label>Description:</label><br/>
