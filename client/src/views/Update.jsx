@@ -1,58 +1,57 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { navigate } from "@reach/router";
+import ProjectForm from "../components/ProjectForm";
 
-export default props => {
+const Update = (props) => {
     const { id } = props;
-    const [projName, setProjName] = useState(""); 
-    const [description, setDesc] = useState("");
-    const [price, setPrice] = useState(0);
+    const [errors, setErrors] = useState({});
+    const [dataObj,setDataObj] = useState({
+        projName : "",
+        description : "",
+        price : 0,
+    });
+
+    const updateObj = (e) => {
+        setDataObj({
+            ...dataObj,
+            [e.target.name]: e.target.value,
+        });
+    };
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/project/' + id)
-            .then(res => {
-                setProjName(res.data.projName);
-                setDesc(res.data.description);
-                setPrice(res.price);
-            })
-    }, [])
-    const updateProject = e => {
+        axios.get("http://localhost:8000/api/project/" + id).then((res) => {
+            setDataObj(res.data.results)
+        });
+    }, []);
+
+    const updateProject = (e) => {
         e.preventDefault();
-        axios.put('http://localhost:8000/api/project/' + id, {
-            projName,
-            price,
-            description
-        })
-            .then(res => console.log(res));
-    }
+        axios
+            .put("http://localhost:8000/api/project/" + id, dataObj)
+            .then((res) => {
+                if (res.data.results) {
+                    navigate("/project/");
+                } else {
+                    setErrors(res.data);
+                }
+                console.log(res.data)
+            });
+    };
+
     return (
         <div>
             <h1>Update a Project</h1>
-            <form onSubmit={updateProject}>
-                <p>
-                    <label>Project Name</label><br />
-                    <input type="text" 
-                    name="firstName" 
-                    value={projName} 
-                    onChange={(e) => { setProjName(e.target.value) }} />
-                </p>
-                <p>
-                    <label>Description</label><br />
-                    <input type="text" 
-                    name="lastName"
-                    value={description} 
-                    onChange={(e) => { setDesc(e.target.value) }} />
-                </p>
-                <p>
-                    <label>Price</label><br />
-                    <input type="Number" 
-                    min="0"
-                    step="1"
-                    name="lastName"
-                    value={price} 
-                    onChange={(e) => { setPrice(e.target.value) }} />
-                </p>
-                <input type="submit" />
-            </form>
+            <ProjectForm 
+                form = {dataObj}
+                errors={errors}
+                handleChange={updateObj}
+                handleSubmit={updateProject}
+                submitValue="Update Project"
+            />
+            
         </div>
-    )
-}
+    );
+};
+
+export default Update;

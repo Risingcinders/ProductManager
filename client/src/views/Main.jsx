@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import ProjectForm from "../components/ProjectForm";
 import ProjectList from "../components/ProjectList";
 
 export default () => {
@@ -9,9 +8,9 @@ export default () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8000/api/projects")
+            .get("http://localhost:8000/api/project")
             .then((res) => {
-                setProjects(res.data);
+                setProjects(res.data.results);
                 setLoaded(true);
             })
             .catch((err) => console.log(err));
@@ -19,7 +18,6 @@ export default () => {
 
     return (
         <div>
-            <ProjectForm />
             <table>
                 <thead>
                     <tr>
